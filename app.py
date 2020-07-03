@@ -3,6 +3,8 @@ from flask import jsonify
 from flask import request
 import json
 import time
+import random
+import string
 
 
 app = Flask(__name__)
@@ -45,8 +47,18 @@ def add_message():
             "created_at": int(time.time()),
         }
     )
-    return jsonify({"status":"ok"})
+    return jsonify([post for post in feed_posts])
 
+@app.route('/add-test')
+def add_message_test():
+    global feed_posts
+    feed_posts.append(
+        {
+            "username": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
+            "text": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(200)),
+        }
+    )
+    return jsonify([post for post in feed_posts])
 
 
 
