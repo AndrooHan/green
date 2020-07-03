@@ -34,7 +34,7 @@ def hello_world():
 @app.route('/feed')
 def get_all_feed():
     global feed_posts
-    return jsonify([post for post in feed_posts])
+    return jsonify([post for post in get_feed_posts()])
 
 @app.route('/add', methods=['POST'])
 def add_message():
@@ -47,7 +47,7 @@ def add_message():
             "created_at": int(time.time()),
         }
     )
-    return jsonify([post for post in feed_posts])
+    return jsonify([post for post in get_feed_posts()])
 
 @app.route('/add-test')
 def add_message_test():
@@ -56,13 +56,19 @@ def add_message_test():
         {
             "username": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10)),
             "text": ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(200)),
+            "created_at": int(time.time()),
         }
     )
-    return jsonify([post for post in feed_posts])
+    return jsonify([post for post in get_feed_posts()])
+
+def myFunc(post):
+  return post['created_at']
 
 
-
-
+def get_feed_posts():
+    global feed_posts
+    feed_posts.sort(reverse=True, key=myFunc)
+    return feed_posts
 
 
 
