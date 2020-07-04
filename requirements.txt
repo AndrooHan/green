@@ -25,7 +25,6 @@ Jinja2==2.11.2
 jwcrypto==0.7
 kiwisolver==1.1.0
 MarkupSafe==1.1.1
-matplotlib==2.2.5
 munch==2.5.0
 numpy==1.16.6
 pandas==0.24.2

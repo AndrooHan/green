@@ -7,7 +7,6 @@ import time
 import random
 import string
 import geo
-import matplotlib.pyplot as plt
 
 
 app = Flask(__name__)
