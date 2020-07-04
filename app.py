@@ -83,7 +83,7 @@ def add_message():
             "longitude": content['longitude'],
         }
     )
-    return jsonify([post for post in get_feed_posts()])
+    return jsonify([post for post in get_feed_posts() if geo.inside_polygon(circle, post['latitude'], post['longitude'])])
 
 @app.route('/add-test')
 def add_message_test():
