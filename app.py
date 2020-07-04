@@ -79,6 +79,8 @@ def add_message():
             "username": content['username'],
             "text": content['text'],
             "created_at": int(time.time()),
+            "latitude": content['latitude'],
+            "longitude": content['longitude'],
         }
     )
     return jsonify([post for post in get_feed_posts()])
