@@ -55,7 +55,7 @@ def get_all_feed():
 def get_specific_feed():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
-    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 100))
+    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 1))
 
 @app.route('/add', methods=['POST'])
 def add_message():
@@ -75,7 +75,7 @@ def add_message():
             "longitude": longitude,
         }
     )
-    return jsonify(get_feed_posts_within(latitude, longitude, 100))
+    return jsonify(get_feed_posts_within(latitude, longitude, 1))
 
 @app.route('/add-test')
 def add_message_test():
@@ -91,6 +91,14 @@ def add_message_test():
 
 def myFunc(post):
   return post['created_at']
+
+# def get_feed_posts_within2(latitude, longitude, radius):
+#     print("finding posts within using new func")
+#     print("latitude: " +  str(latitude))
+#     print("longitude: " +  str(longitude))
+#     print("radius: " + str(radius))
+#     filtered_posts = [post for post in get_feed_posts() if geo.within_point(circle, latitude, 1)]
+#     filtered_posts.sort(reverse=True, key=myFunc)
 
 def get_feed_posts_within(latitude, longitude, radius):
     print("finding posts within")
