@@ -24,7 +24,7 @@ def find_circle(centerLat, centerLon, radius):
 
 	# generate points
 	circlePoints = []
-	for k in xrange(N):
+	for k in range(N):
 	    # compute
 	    angle = math.pi*2*k/N
 	    dx = radius*math.cos(angle)
