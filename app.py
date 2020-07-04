@@ -105,8 +105,8 @@ def get_feed_posts_within(latitude, longitude, radius):
     print("latitude: " +  str(latitude))
     print("longitude: " +  str(longitude))
     print("radius: " + str(radius))
-    circle = geo.find_circle(latitude, longitude, radius)
-    filtered_posts = [post for post in get_feed_posts() if geo.inside_polygon(circle, latitude, longitude)]
+    user_circle = geo.find_circle(latitude, longitude, radius)
+    filtered_posts = [post for post in get_feed_posts() if geo.inside_polygon(user_circle, post['latitude'], post['longitude'])]
     filtered_posts.sort(reverse=True, key=myFunc)
     return filtered_posts
 
