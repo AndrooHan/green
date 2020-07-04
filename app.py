@@ -39,9 +39,7 @@ feed_posts = [
 @app.route('/test')
 def random_test():
     gs = geo.test()
-    
-    gs.plot()
-    plt.show()
+
     # return render_template('simple.html',  tables=[gs.to_html(classes='data')], titles=gs.columns.values)
     return "looool"
     # gs.savefig('img/plot.png')
