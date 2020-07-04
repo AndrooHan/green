@@ -45,13 +45,9 @@ def random_test():
     # return render_template('plot.html', url='/img/plot.png')
     # return "cool"
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
 @app.route('/feed')
 def get_all_feed():
-    return jsonify([post for post in get_feed_posts()])
+    return jsonify(get_feed_posts())
 
 
 #/api/feed?latitude=34.2323&longitude=-232.99222
@@ -59,20 +55,15 @@ def get_all_feed():
 def get_specific_feed():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
-
-    print("latitude: " + latitude)
-    print("longitude: " + longitude)
-    circle = geo.find_circle(latitude, longitude, 100000)
-
-    # find posts within the circle
-    return jsonify([post for post in get_feed_posts() if geo.inside_polygon(circle, post['latitude'], post['longitude'])])
-
+    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 100000))
+    
 @app.route('/add', methods=['POST'])
 def add_message():
     global feed_posts
     content = request.json
     latitude = content['latitude']
     longitude = content['longitude']
+
     print("latitude: " + str(latitude))
     print("longitude: " + str(longitude))
     feed_posts.append(
@@ -84,8 +75,7 @@ def add_message():
             "longitude": longitude,
         }
     )
-    circle = geo.find_circle(content['latitude'], content['longitude'], 100000)
-    return jsonify([post for post in get_feed_posts() if geo.inside_polygon(circle, post['latitude'], post['longitude'])])
+    return jsonify(get_feed_posts_within(latitude, longitude, 100000))
 
 @app.route('/add-test')
 def add_message_test():
@@ -102,6 +92,15 @@ def add_message_test():
 def myFunc(post):
   return post['created_at']
 
+def get_feed_posts_within(latitude, longitude, radius):
+    print("finding posts within")
+    print("latitude: " +  str(latitude))
+    print("longitude: " +  str(longitude))
+    print("radius: " + str(radius))
+    circle = geo.find_circle(latitude, longitude, radius)
+    filtered_posts = [post for post in get_feed_posts() if geo.inside_polygon(circle, latitude, longitude)]
+    filtered_posts.sort(reverse=True, key=myFunc)
+    return filtered_posts
 
 def get_feed_posts():
     global feed_posts
