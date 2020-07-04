@@ -51,15 +51,12 @@ def hello_world():
 
 @app.route('/feed')
 def get_all_feed():
-    global feed_posts
     return jsonify([post for post in get_feed_posts()])
 
 
 #/api/feed?latitude=34.2323&longitude=-232.99222
 @app.route('/api/feed')
 def get_specific_feed():
-    global feed_posts
-
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
 
@@ -74,13 +71,17 @@ def get_specific_feed():
 def add_message():
     global feed_posts
     content = request.json
+    latitude = content['latitude']
+    longitude = content['longitude']
+    print("latitude: " + latitude)
+    print("longitude: " + longitude)
     feed_posts.append(
         {
             "username": content['username'],
             "text": content['text'],
             "created_at": int(time.time()),
-            "latitude": content['latitude'],
-            "longitude": content['longitude'],
+            "latitude": latitude,
+            "longitude": longitude,
         }
     )
     circle = geo.find_circle(content['latitude'], content['longitude'], 100000)
