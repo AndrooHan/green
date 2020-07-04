@@ -35,6 +35,8 @@ def find_circle(centerLat, centerLon, radius):
 	    # add to list
 	    circlePoints.append((point['lat'], point['lon']))
 
+	print(circlePoints)
+
 	return Polygon(circlePoints)
 
 def inside_polygon(polygon, latitude, longitude):
