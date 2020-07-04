@@ -18,16 +18,16 @@ def test():
 	# print("Contains")
 	# print(contain)
 	# return states
-def within_point(x_1, y_1, x_2, y_2, distance):
+# def within_point(x_1, y_1, x_2, y_2, distance):
 
-	# create your two points
-	point_1 = Point(x_1, y_1)
-	point_2 = Point(x_2, y_2)
+# 	# create your two points
+# 	point_1 = Point(x_1, y_1)
+# 	point_2 = Point(x_2, y_2)
 
-	# create your circle buffer from one of the points
-	distance = 1000
-	circle_buffer = point_1.buffer(distance)
-	return point_1.distance(point_2) < distance:
+# 	# create your circle buffer from one of the points
+# 	distance = 1000
+# 	circle_buffer = point_1.buffer(distance)
+# 	return point_1.distance(point_2) < distance:
 
 def find_circle(centerLat, centerLon, radius):
 	N = 10 # number of discrete sample points to be generated along the circle
