@@ -73,8 +73,8 @@ def add_message():
     content = request.json
     latitude = content['latitude']
     longitude = content['longitude']
-    print("latitude: " + latitude)
-    print("longitude: " + longitude)
+    print("latitude: " + str(latitude))
+    print("longitude: " + str(longitude))
     feed_posts.append(
         {
             "username": content['username'],
