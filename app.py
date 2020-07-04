@@ -65,7 +65,7 @@ def get_specific_feed():
 
     print("latitude: " + latitude)
     print("longitude: " + longitude)
-    circle = geo.find_circle(latitude, longitude, 10000)
+    circle = geo.find_circle(latitude, longitude, 100000)
 
     # find posts within the circle
     return jsonify([post for post in get_feed_posts() if geo.inside_polygon(circle, post['latitude'], post['longitude'])])
@@ -83,7 +83,7 @@ def add_message():
             "longitude": content['longitude'],
         }
     )
-    circle = geo.find_circle(content['latitude'], content['longitude'], 10000)
+    circle = geo.find_circle(content['latitude'], content['longitude'], 100000)
     return jsonify([post for post in get_feed_posts() if geo.inside_polygon(circle, post['latitude'], post['longitude'])])
 
 @app.route('/add-test')
