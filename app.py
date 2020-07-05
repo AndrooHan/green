@@ -133,7 +133,8 @@ def seed_redis():
         r.set(str(uuid.uuid4()), json_post)
 
 def add_to_redis(post):
-    r.set(str(uuid.uuid4()), post)
+    json_post = json.dumps(post)
+    r.set(str(uuid.uuid4()), json_post)
 
 
 
