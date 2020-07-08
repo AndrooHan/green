@@ -1,7 +1,7 @@
 import geopandas as gpd
 from shapely.geometry import Polygon, Point
 import math
-from haversine import haversine, Unit
+# from haversine import haversine, Unit
 
 def test():
 	states = gpd.read_file('us-states.json')
