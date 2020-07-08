@@ -1,6 +1,7 @@
 import geopandas as gpd
 from shapely.geometry import Polygon, Point
 import math
+from haversine import haversine, Unit
 
 def test():
 	states = gpd.read_file('us-states.json')
@@ -52,3 +53,29 @@ def find_circle(centerLat, centerLon, radius):
 def inside_polygon(polygon, latitude, longitude):
 	p = Point(latitude, longitude)
 	return polygon.contains(p)
+
+
+# 1 degree of Longitude = cosine (latitude) * (miles)
+
+def degreesToRadians(degrees):
+  return degrees * math.pi / 180;
+
+
+def create_circle(radius, points, latitude, longitude):
+	# Degrees to radians 
+	d2r = math.pi / 180
+	# Radians to degrees
+	r2d = 180 / math.pi
+	#Earth radius is 3,963 miles
+	cLat = (radius / 3963) * r2d
+	cLng = cLat / math.cos(latitude * d2r)
+	print("cLat "+str(cLat)+" cLng "+str(cLng))
+	# generate points
+	circlePoints = []
+	for i in range(1, points+1):
+		theta = math.pi * (i/1)
+		print("theta: "+str(theta))
+		circleY = longitude + (cLng * math.cos(theta))
+		circleX = latitude + (cLat * math.sin(theta))
+		circlePoints.append((circleX, circleY))
+	return circlePoints

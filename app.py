@@ -57,6 +57,7 @@ def add_message():
         "created_at": int(time.time()),
         "latitude": latitude,
         "longitude": longitude,
+        "likes": 0,
     }
     add_to_redis(post)
     
@@ -105,6 +106,7 @@ def get_feed_posts():
 
 # Redis functions ===============================
 def seed_redis():
+    r.flushdb()
     feed_posts = [
         {
             "username": "user_a",
@@ -112,6 +114,7 @@ def seed_redis():
             "created_at": int(time.time()),
             "latitude": 37.2310016,
             "longitude": -121.7691648,
+            "likes": 28,
         },
         {
             "username": "user_b",
@@ -119,6 +122,7 @@ def seed_redis():
             "created_at": int(time.time())+10,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
+            "likes": 6,
         },
         {
             "username": "user_c",
@@ -126,6 +130,7 @@ def seed_redis():
             "created_at": int(time.time())+20,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
+            "likes": 12,
         },
     ]
     for post in feed_posts:  
