@@ -41,7 +41,7 @@ def get_all_feed():
 def get_specific_feed():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
-    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 1))
+    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 10))
 
 @app.route('/add', methods=['POST'])
 def add_message():
@@ -61,7 +61,7 @@ def add_message():
     }
     add_to_redis(post)
     
-    return jsonify(get_feed_posts_within(latitude, longitude, 1))
+    return jsonify(get_feed_posts_within(latitude, longitude, 10))
 
 # @app.route('/add-test')
 # def add_message_test():
