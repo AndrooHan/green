@@ -3,7 +3,7 @@ from shapely.geometry import Polygon, Point
 import math
 from haversine import haversine, Unit
 
-def distance_between(lat1, lon1, lat2, long2):
+def distance_between(lat1, lon1, lat2, lon2):
 	return haversine((float(lat1), float(lon1)), (float(lat2), float(lon2)), unit=Unit.MILES)
 
 def test():
