@@ -52,6 +52,7 @@ def add_message():
     print("latitude: " + str(latitude))
     print("longitude: " + str(longitude))
     post = {
+        "id": content['id'],
         "username": content['username'],
         "text": content['text'],
         "created_at": int(time.time()),
@@ -59,7 +60,20 @@ def add_message():
         "longitude": longitude,
         "likes": 0,
     }
-    add_to_redis(post)
+    if not r.exists(post['id']):
+        add_or_update_redis(post)
+    
+    return jsonify(get_feed_posts_close_to(latitude, longitude, 100))
+
+@app.route('/like', methods=['POST'])
+def like_message():
+    post_id = request.json['post_id']
+
+    post_json = get_redis_post(post_id)
+    post_json['likes'] = int(post_json['likes']) + 1
+    
+    print("new post likes: " + str(post_json))
+    add_or_update_redis(post_json)
     
     return jsonify(get_feed_posts_close_to(latitude, longitude, 100))
 
@@ -118,6 +132,7 @@ def seed_redis():
     r.flushdb()
     feed_posts = [
         {
+            "id": "71e5cfa0-9e18-4810-8f73-afdb009203c0",
             "username": "user_a",
             "text": "first post!",
             "created_at": int(time.time()),
@@ -126,6 +141,7 @@ def seed_redis():
             "likes": 28,
         },
         {
+            "id": "6fb4a31e-c9fa-4ab3-b160-9e043011426c",
             "username": "user_b",
             "text": "So Im currently an 18 year old boy whos been pro life for about as long as Ive known abortion existed. I just graduated high school a few weeks ago and this is pretty much just a rant about the hive mind of my now former school. Being pro life in my generation is something that gets looked down on, and peoples reaction to someone saying theyre pro life is about equal to if you tell them you kill puppies for fun. Thats the level of shock and disgust people my age have for someone being pro life. Rational conversations dont exist since holding that opinion makes you a misogynistic prick not worth their time. Anytime abortion is brought up they make the same few points and these points themselves prove they have zero knowledge of the science behind it. The points are",
             "created_at": int(time.time())+10,
@@ -134,6 +150,7 @@ def seed_redis():
             "likes": 6,
         },
         {
+            "id": "4efa3744-0d5c-47d9-aa18-5c922a45c899",
             "username": "user_c",
             "text": "hello everyone",
             "created_at": int(time.time())+20,
@@ -144,11 +161,15 @@ def seed_redis():
     ]
     for post in feed_posts:  
         json_post = json.dumps(post)
-        r.set(str(uuid.uuid4()), json_post)
+        r.set(str(post['id']), json_post)
 
-def add_to_redis(post):
+def add_or_update_redis(post):
     json_post = json.dumps(post)
-    r.set(str(uuid.uuid4()), json_post)
+    r.set(post['id'], json_post)
+
+def get_redis_post(post_id):
+    redis_post = r.get(str(post_id))
+    return json.loads(redis_post)
 
 
 
