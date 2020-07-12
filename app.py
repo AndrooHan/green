@@ -42,7 +42,7 @@ def add_user():
     username = content['username']
     provider_uid = content['provider_uid']
     add_user_redis(user_id, username, provider_uid)
-    return
+    return "Okay"
 
 @app.route('/users')
 def get_user():
