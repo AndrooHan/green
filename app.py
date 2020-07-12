@@ -35,6 +35,19 @@ def random_test():
 def get_all_feed():
     return jsonify(get_feed_posts())
 
+@app.route('/user', methods=['POST'])
+def add_user():
+    content = request.json
+    user_id = content['id']
+    username = content['username']
+    provider_uid = content['provider_uid']
+    add_user_redis(user_id, username, provider_uid)
+    return
+
+@app.route('/users')
+def get_user():
+    return jsonify(get_users())
+
 
 #/api/feed?latitude=34.2323&longitude=-232.99222
 @app.route('/api/feed')
@@ -59,6 +72,7 @@ def add_message():
         "latitude": latitude,
         "longitude": longitude,
         "likes": 0,
+        "type": "post",
     }
     if not r.exists(post['id']):
         add_or_update_redis(post)
@@ -122,9 +136,17 @@ def get_feed_posts_close_to(latitude, longitude, radius):
 def get_feed_posts():
     keys = r.keys()
     vals = r.mget(keys)
-    feed_posts = [json.loads(v) for v in vals]
+    json_vals = [json.loads(v) for v in vals]
+    feed_posts = [item for item in json_vals if item['type'] == 'post']
     feed_posts.sort(reverse=True, key=myFunc)
     return feed_posts
+
+def get_users():
+    keys = r.keys()
+    vals = r.mget(keys)
+    json_vals = [json.loads(v) for v in vals]
+    users = [item for item in json_vals if item['type'] == 'user']
+    return users
 
 
 # Redis functions ===============================
@@ -138,7 +160,8 @@ def seed_redis():
             "created_at": int(time.time()),
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": 28,
+            "likes": ['username_a'],
+            "type": "post",
         },
         {
             "id": "6fb4a31e-c9fa-4ab3-b160-9e043011426c",
@@ -148,6 +171,7 @@ def seed_redis():
             "latitude": 37.2310016,
             "longitude": -121.7691648,
             "likes": 6,
+            "type": "post",
         },
         {
             "id": "4efa3744-0d5c-47d9-aa18-5c922a45c899",
@@ -157,6 +181,7 @@ def seed_redis():
             "latitude": 37.2310016,
             "longitude": -121.7691648,
             "likes": 12,
+            "type": "post",
         },
     ]
     for post in feed_posts:  
@@ -170,6 +195,16 @@ def add_or_update_redis(post):
 def get_redis_post(post_id):
     redis_post = r.get(str(post_id))
     return json.loads(redis_post)
+
+def add_user_redis(user_id, username, provider_uid):
+    user = {
+        "id": user_id,
+        "username": username,
+        "provider_uid": uid,
+        "type": "user",
+    }
+    json_user = json.dumps(user)
+    r.set(user_id, json_user)
 
 
 
