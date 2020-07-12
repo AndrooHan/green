@@ -41,7 +41,7 @@ def get_all_feed():
 def get_specific_feed():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
-    return jsonify(get_feed_posts_within(float(latitude), float(longitude), 100))
+    return jsonify(get_feed_posts_close_to(float(latitude), float(longitude), 100))
 
 @app.route('/add', methods=['POST'])
 def add_message():
@@ -61,7 +61,7 @@ def add_message():
     }
     add_to_redis(post)
     
-    return jsonify(get_feed_posts_within(latitude, longitude, 100))
+    return jsonify(get_feed_posts_close_to(latitude, longitude, 100))
 
 # @app.route('/add-test')
 # def add_message_test():
@@ -93,6 +93,15 @@ def get_feed_posts_within(latitude, longitude, radius):
     print("radius: " + str(radius))
     user_circle = geo.find_circle(latitude, longitude, radius)
     filtered_posts = [post for post in get_feed_posts() if geo.inside_polygon(user_circle, post['latitude'], post['longitude'])]
+    filtered_posts.sort(reverse=True, key=myFunc)
+    return filtered_posts
+
+def get_feed_posts_close_to(latitude, longitude, radius):
+    print("finding posts close to")
+    print("latitude: " +  str(latitude))
+    print("longitude: " +  str(longitude))
+    print("radius: " + str(radius))
+    filtered_posts = [post for post in get_feed_posts() if geo.distance_between(latitude, longitude, post['latitude'], post['longitude']) <= 10]
     filtered_posts.sort(reverse=True, key=myFunc)
     return filtered_posts
 
