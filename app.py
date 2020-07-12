@@ -200,7 +200,7 @@ def add_user_redis(user_id, username, provider_uid):
     user = {
         "id": user_id,
         "username": username,
-        "provider_uid": uid,
+        "provider_uid": provider_uid,
         "type": "user",
     }
     json_user = json.dumps(user)
