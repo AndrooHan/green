@@ -75,7 +75,7 @@ def like_message():
     print("new post likes: " + str(post_json))
     add_or_update_redis(post_json)
     
-    return jsonify(get_feed_posts_close_to(latitude, longitude, 100))
+    return jsonify(get_feed_posts_close_to(post_json['latitude'], post_json['longitude'], 100))
 
 # @app.route('/add-test')
 # def add_message_test():
