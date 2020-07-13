@@ -1,4 +1,3 @@
-import geopandas as gpd
 from shapely.geometry import Polygon, Point
 import math
 from haversine import haversine, Unit

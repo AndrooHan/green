@@ -13,8 +13,6 @@ import os
 import fakeredis
 import socket
 
-
-
 app = Flask(__name__)
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
@@ -54,6 +52,7 @@ def get_user():
 def get_specific_feed():
     latitude = request.args.get('latitude')
     longitude = request.args.get('longitude')
+
     return jsonify(get_feed_posts_close_to(float(latitude), float(longitude), 100))
 
 @app.route('/add', methods=['POST'])
@@ -71,7 +70,7 @@ def add_message():
         "created_at": int(time.time()),
         "latitude": latitude,
         "longitude": longitude,
-        "likes": 0,
+        "likes": {},
         "type": "post",
     }
     if not r.exists(post['id']):
@@ -82,9 +81,10 @@ def add_message():
 @app.route('/like', methods=['POST'])
 def like_message():
     post_id = request.json['post_id']
+    user_id = request.json['user_id']
 
     post_json = get_redis_post(post_id)
-    post_json['likes'] = int(post_json['likes']) + 1
+    post_json['likes'].add(user_id)
     
     print("new post likes: " + str(post_json))
     add_or_update_redis(post_json)
@@ -160,7 +160,7 @@ def seed_redis():
             "created_at": int(time.time()),
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": ['username_a'],
+            "likes": {'username_a'},
             "type": "post",
         },
         {
@@ -170,7 +170,7 @@ def seed_redis():
             "created_at": int(time.time())+10,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": 6,
+            "likes": {'username_a'},
             "type": "post",
         },
         {
@@ -180,7 +180,7 @@ def seed_redis():
             "created_at": int(time.time())+20,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": 12,
+            "likes": {'username_a'},
             "type": "post",
         },
     ]
