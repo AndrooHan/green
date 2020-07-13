@@ -70,7 +70,7 @@ def add_message():
         "created_at": int(time.time()),
         "latitude": latitude,
         "longitude": longitude,
-        "likes": {},
+        "likes": [],
         "type": "post",
     }
     if not r.exists(post['id']):
@@ -84,7 +84,8 @@ def like_message():
     user_id = request.json['user_id']
 
     post_json = get_redis_post(post_id)
-    post_json['likes'].add(user_id)
+    if user_id not in post_json['likes']:
+        post_json['likes'].append(user_id)
     
     print("new post likes: " + str(post_json))
     add_or_update_redis(post_json)
@@ -160,7 +161,7 @@ def seed_redis():
             "created_at": int(time.time()),
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": {'username_a'},
+            "likes": ['username_a'],
             "type": "post",
         },
         {
@@ -170,7 +171,7 @@ def seed_redis():
             "created_at": int(time.time())+10,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": {'username_a'},
+            "likes": ['username_a'],
             "type": "post",
         },
         {
@@ -180,7 +181,7 @@ def seed_redis():
             "created_at": int(time.time())+20,
             "latitude": 37.2310016,
             "longitude": -121.7691648,
-            "likes": {'username_a'},
+            "likes": ['username_a'],
             "type": "post",
         },
     ]
