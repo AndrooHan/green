@@ -89,7 +89,7 @@ def add_message():
         "likes": [],
         "type": "post",
     }
-    if not r.exists(post['id']):
+    if not Redis.get().exists(post['id']):
         redis_helper.add_or_update_redis(post)
     
     return jsonify(feed.get_feed_posts_close_to(latitude, longitude, 100))
