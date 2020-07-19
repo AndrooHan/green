@@ -15,6 +15,7 @@ import feed
 import users
 import time
 from shapely.geometry import Polygon, Point
+from redis_helper import Redis
 
 
 app = Flask(__name__)
