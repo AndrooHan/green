@@ -66,7 +66,7 @@ def add_or_update_redis(post):
     Redis.get().set(post['id'], json_post)
 
 def get_redis_post(post_id):
-    redis_post = r.get(str(post_id))
+    redis_post = Redis.get().get(str(post_id))
     return json.loads(redis_post)
 
 def add_user_redis(user_id, username, provider_uid):
