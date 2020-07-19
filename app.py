@@ -8,13 +8,12 @@ import string
 import geo
 import radar
 import uuid
-import redis
-import os
 import io
 import base64
 import redis_helper
 import feed
 import users
+import time
 from shapely.geometry import Polygon, Point
 
 
