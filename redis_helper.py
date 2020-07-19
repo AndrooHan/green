@@ -2,6 +2,7 @@ import fakeredis
 import socket
 import time
 import json
+import redis
 
 class Redis:
    __instance = None
