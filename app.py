@@ -100,7 +100,7 @@ def like_message():
     post_id = request.json['post_id']
     user_id = request.json['user_id']
 
-    post_json = get_redis_post(post_id)
+    post_json = redis_helper.get_redis_post(post_id)
     if user_id not in post_json['likes']:
             post_json['likes'].append(user_id)
     
