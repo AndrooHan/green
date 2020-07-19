@@ -2,35 +2,17 @@ from shapely.geometry import Polygon, Point
 import math
 from haversine import haversine, Unit
 
+
 def distance_between(lat1, lon1, lat2, lon2):
 	return haversine((float(lat1), float(lon1)), (float(lat2), float(lon2)), unit=Unit.MILES)
 
-def test():
-	states = gpd.read_file('us-states.json')
-	cali_multi_poly = states.loc[states['NAME'] == 'California'].geometry
-	return cali_multi_poly
-	# states.show()
-	# print(states.head())
-
-	# p1 = Point(36.527295,-120.418203)
-	# cali_multi_poly = states.loc[states['NAME'] == 'California'].geometry
-	# print("Cali")
-	# print(type(cali_multi_poly))
-	# print(cali_multi_poly)
-	# contain = cali_multi_poly.intersects(p1)
-	# print("Contains")
-	# print(contain)
-	# return states
-# def within_point(x_1, y_1, x_2, y_2, distance):
-
-# 	# create your two points
-# 	point_1 = Point(x_1, y_1)
-# 	point_2 = Point(x_2, y_2)
-
-# 	# create your circle buffer from one of the points
-# 	distance = 1000
-# 	circle_buffer = point_1.buffer(distance)
-# 	return point_1.distance(point_2) < distance:
+def create_figure():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = range(100)
+    ys = [random.randint(1, 50) for x in xs]
+    axis.plot(xs, ys)
+    return fig
 
 def find_circle(centerLat, centerLon, radius):
 	N = 10 # number of discrete sample points to be generated along the circle
@@ -53,7 +35,7 @@ def find_circle(centerLat, centerLon, radius):
 	return Polygon(circlePoints)
 
 def inside_polygon(polygon, latitude, longitude):
-	p = Point(latitude, longitude)
+	p = Point(longitude, latitude)
 	return polygon.contains(p)
 
 
@@ -81,3 +63,25 @@ def create_circle(radius, points, latitude, longitude):
 		circleX = latitude + (cLat * math.sin(theta))
 		circlePoints.append((circleX, circleY))
 	return circlePoints
+
+
+def validate_lat_long_radius(latitude, longitude, radius):
+    latvalid = latitude > -90 and latitude < 90
+    longvalid = longitude > -180 and longitude < 180
+    radiusvalid = radius > 0
+    print('{} {} {}'.format(latitude, longitude, radiusvalid))
+    return latvalid and longvalid and radiusvalid
+
+
+
+def within_radius(feed_post, latitude, longitude, radius):
+    return distance_between(latitude, longitude, feed_post['latitude'], feed_post['longitude']) <= radius
+
+def within_geofence(feed_post, geofence):
+    if geofence['gemoetry']['type'] == 'Polygon':
+        for coordinate in geofence['geometry']['coordinates']:
+            poly = Polygon(coordinate)
+            return geo.inside_polygon(poly, feed_post['latitude'], feed_post['longitude'])
+    else:
+        print('Geofence {} not type poygon'.format(geofence['id']))
+    return False
