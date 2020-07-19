@@ -3,6 +3,7 @@ import socket
 import time
 import json
 import redis
+import os
 
 class Redis:
    __instance = None
