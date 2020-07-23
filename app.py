@@ -14,6 +14,7 @@ import redis_helper
 import feed
 import users
 import time
+import socket
 from shapely.geometry import Polygon, Point
 from redis_helper import Redis
 
@@ -117,6 +118,13 @@ def within_geofence(feed_post, geofence):
     else:
         print('Geofence {} not type poygon'.format(geofence['id']))
     return False
+
+
+def is_local():
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname)
+    return str(ip_address) == "127.0.0.1"
+
 
 redis_helper.seed_redis()
 
